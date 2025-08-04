@@ -229,7 +229,7 @@ La commande `git diff` permet de **voir les changements** ligne par ligne entre 
 - ou entre **deux commits**, **deux branches**, etc.
 <br>
 
-En résumé la commande **`git diff`** permet de pouvoir compararer deux versions de notre code.
+En résumé la commande **`git diff`** permet de pouvoir compararer deux versions de notre code, entre deux commit.
 
 ---
 
@@ -305,3 +305,156 @@ Cette commande affiche l'historique des commits dans un dépôt Git. Elle vous i
 - `git log --decorate` : Affiche les noms des branches et tags
 - `git log --all` : Montre les commits de toutes les branches
 
+
+<br>
+<br>
+
+## Que fait `git checkout` ?
+
+La commande `git checkout` permet de naviguer entre les branches, de restaurer des fichiers ou de revenir à un commit spécifique. Elle peut être utilisée pour :
+
+- 🌿 **Changer de branche**  
+  *(ex. : `git checkout nom-de-branche`)*
+
+- ✨ **Créer une nouvelle branche et s’y positionner**  
+  *(ex. : `git checkout -b nouvelle-branche`)*
+
+- 🛠️ **Restaurer un fichier modifié depuis l'index ou un commit**  
+  *(ex. : `git checkout HEAD -- chemin/fichier.txt`)*
+
+- 🕒 **Se déplacer à un commit spécifique**  
+  *(ex. : `git checkout abc1234` pour un commit précis — mode détaché)*
+
+---
+
+### Cas d’usage courants
+
+| Commande                              | Action effectuée                                              |
+|---------------------------------------|---------------------------------------------------------------|
+| `git checkout dev`                    | Change vers la branche `dev`                                 |
+| `git checkout -b feature/login`       | Crée et passe à une nouvelle branche `feature/login`         |
+| `git checkout -- index.html`          | Restaure le fichier `index.html` depuis l'index              |
+| `git checkout abc1234`                | Passe à un commit spécifique (mode détaché)                  |
+
+---
+
+### Remarques
+
+- Depuis Git 2.23, `git checkout` a été partiellement remplacée par deux commandes plus spécifiques :
+  - `git switch` (pour changer de branche)
+  - `git restore` (pour restaurer des fichiers)
+
+> 💡 **Bon à savoir :** utiliser `git checkout` peut écraser des modifications locales si elles ne sont pas commités ou sauvegardées.
+
+<br>
+<br>
+
+## Que fait `git restore` ?
+
+La commande `git restore` permet d’annuler ou de restaurer des modifications apportées à des fichiers dans l’espace de travail ou dans l’index. Elle est introduite à partir de Git 2.23 pour remplacer certains usages ambigus de `git checkout`.
+
+### Elle peut être utilisée pour :
+
+- 🔄 **Annuler des modifications locales**  
+  *(restaurer un fichier à son état dans le dernier commit)*  
+  ➤ `git restore fichier.txt`
+
+- 🔙 **Retirer un fichier de l'index**  
+  *(le fichier reste modifié mais n’est plus en attente de commit)*  
+  ➤ `git restore --staged fichier.txt`
+
+- 💾 **Restaurer un fichier depuis un commit spécifique**  
+  ➤ `git restore --source=HEAD~1 fichier.txt`
+
+---
+
+### Cas d’usage courants
+
+| Commande                                  | Action effectuée                                               |
+|-------------------------------------------|----------------------------------------------------------------|
+| `git restore index.html`                  | Remplace `index.html` par la version du dernier commit         |
+| `git restore --staged index.html`         | Retire `index.html` du staging area                            |
+| `git restore --source=commit_id fichier`  | Restaure le fichier depuis un commit spécifique                |
+| `git restore .`                           | Restaure tous les fichiers modifiés (attention !)              |
+
+---
+
+### Comparaison rapide : `restore` vs `checkout`
+
+| Action                                   | Ancienne méthode (`checkout`)      | Nouvelle méthode (`restore`)          |
+|------------------------------------------|-------------------------------------|----------------------------------------|
+| Annuler les changements d’un fichier     | `git checkout -- fichier.txt`      | `git restore fichier.txt`              |
+| Retirer un fichier du staging            | `git reset HEAD fichier.txt`       | `git restore --staged fichier.txt`     |
+
+> ✅ **Recommandé** : Utiliser `git restore` pour une meilleure clarté et éviter les erreurs liées à `git checkout`.
+
+---
+
+### Astuce
+
+Vous pouvez combiner `--source` avec `--staged` pour restaurer un fichier dans l’index sans toucher au fichier de travail :
+
+```bash
+git restore --source=HEAD --staged fichier.txt
+```
+
+<br>
+<br>
+
+## Que fait `git reset` ?
+
+La commande `git reset` permet de réinitialiser la position de la branche actuelle, de retirer des fichiers du staging area (index), ou d’annuler des commits. Elle peut modifier l’index **et** l’arborescence de travail, selon les options utilisées.
+
+---
+
+### Elle peut être utilisée pour :
+
+- 🔙 **Annuler un commit sans supprimer les modifications dans les fichiers**  
+  ➤ `git reset --soft HEAD~1`
+
+- ♻️ **Annuler un commit et retirer les fichiers du staging**  
+  ➤ `git reset --mixed HEAD~1` (par défaut)
+
+- ❌ **Annuler un commit et écraser les modifications dans les fichiers**  
+  ➤ `git reset --hard HEAD~1`
+
+- 🛠️ **Retirer un ou plusieurs fichiers du staging**  
+  ➤ `git reset HEAD fichier.txt`
+
+---
+
+### Types de `reset`
+
+| Option       | Effet sur les commits | Effet sur l’index (staging) | Effet sur l’arborescence de travail |
+|--------------|------------------------|------------------------------|--------------------------------------|
+| `--soft`     | 🔁 Réécrit HEAD         | ✅ Garde les fichiers dans l’index     | ✅ Garde les modifications locales    |
+| `--mixed`    | 🔁 Réécrit HEAD         | ❌ Retire les fichiers du staging      | ✅ Garde les modifications locales    |
+| `--hard`     | 🔁 Réécrit HEAD         | ❌ Vide le staging                    | ❌ Réinitialise les fichiers locaux   |
+
+---
+
+### Cas d’usage courants
+
+| Commande                              | Action effectuée                                           |
+|---------------------------------------|------------------------------------------------------------|
+| `git reset HEAD fichier.txt`          | Retire un fichier du staging, sans toucher aux modifs      |
+| `git reset --soft HEAD~1`            | Annule le dernier commit, conserve staging et modifs       |
+| `git reset --mixed HEAD~1`           | Annule le dernier commit, vide staging, garde modifs       |
+| `git reset --hard HEAD~1`            | Annule commit, staging et modifications locales (⚠️)        |
+
+---
+
+### ⚠️ Attention
+
+- `git reset --hard` est **destructif** : les modifications locales sont **perdues**.
+- Pour annuler un `reset`, vous pouvez parfois utiliser `git reflog` pour retrouver l'ancien HEAD.
+
+---
+
+### Alternative : `git restore`
+
+Pour retirer un fichier du staging sans toucher aux autres :
+
+```bash
+git restore --staged fichier.txt
+``` 
