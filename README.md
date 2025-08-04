@@ -217,4 +217,91 @@ Pour voir l’historique de ton dépôt :
 - `git commit -m "Premier commit"`  
 - `git log`
 
+<br>
+<br>
+
+# 🔍 Git — La commande `git diff`
+
+La commande `git diff` permet de **voir les changements** ligne par ligne entre :
+
+- le **code actuel** et la **dernière version validée** (commit),
+- la **zone de staging** et la **dernière version validée**,
+- ou entre **deux commits**, **deux branches**, etc.
+<br>
+
+En résumé la commande **`git diff`** permet de pouvoir compararer deux versions de notre code.
+
+---
+
+## 💡 Utilisations courantes
+
+### 1. Voir les modifications non ajoutées au staging
+
+```bash
+git diff
+```
+
+<br>
+<br>
+
+## Que fait `git status` ?
+
+Cette commande vous informe sur :
+
+- ✅ **Les fichiers modifiés mais non indexés**  
+  *(non ajoutés avec `git add`)*
+
+- ✅ **Les fichiers stagés (indexés) prêts à être commités**
+
+- ✅ **Les fichiers non suivis (untracked)**  
+  *(nouveaux fichiers qui ne sont pas encore dans le suivi Git)*
+
+- ✅ **Les fichiers supprimés ou renommés**
+
+- ✅ **La branche active**  
+  *(et si elle est en avance ou en retard par rapport à sa branche distante)*
+
+En résumé le **`git status`** nous permet de voir toutes les modifications entre deux **`git commit`**
+
+  <br>
+
+## Commande `git status`
+
+La commande `git status` est utilisée pour afficher l'état actuel de l'index et de l'arborescence de travail dans un dépôt Git.
+
+## Syntaxe de base
+
+```bash
+git status
+```
+
+<br>
+<br>
+
+## Que fait `git log` ?
+
+Cette commande affiche l'historique des commits dans un dépôt Git. Elle vous informe sur :
+
+- 📌 **Les identifiants uniques des commits** 
+
+- 👤 **L’auteur de chaque commit**  
+  *(nom et adresse email)*
+
+- 🕒 **La date et l’heure du commit**
+
+- 📝 **Le message de commit**  
+  *(description des modifications apportées)*
+
+- 🌿 **La branche et les tags associés** 
+
+- 🔀 **La structure des branches et des fusions**
+
+---
+
+### Exemples d'options utiles
+
+- `git log --oneline` : Affiche chaque commit sur une seule ligne
+- `git log --graph` : Affiche un graphe ASCII de l’historique
+- `git log --decorate` : Affiche les noms des branches et tags
+- `git log --all` : Montre les commits de toutes les branches
 
