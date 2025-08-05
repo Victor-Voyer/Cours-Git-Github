@@ -458,3 +458,96 @@ Pour retirer un fichier du staging sans toucher aux autres :
 ```bash
 git restore --staged fichier.txt
 ``` 
+<br>
+<br>
+
+# 🧠 Les Conflits de Merge
+
+## 📌 Qu'est-ce qu'un Conflit de Merge ?
+
+Un **conflit de merge** se produit lorsque Git ne peut pas fusionner automatiquement deux branches car des modifications incompatibles ont été apportées à la même partie du code dans les deux branches.
+
+### Exemple :
+- Branche `main` : ligne 10 → `color: red;`
+- Branche `feature` : ligne 10 → `color: blue;`
+
+Git ne peut pas deviner quelle couleur choisir.
+
+---
+
+## 🔧 Quand les Conflits Se Produisent-ils ?
+
+1. Lors d’un `git merge` entre deux branches avec des modifications sur les **mêmes lignes** d’un fichier.
+2. Lors d’un `git rebase` si les commits réécrits chevauchent des modifications existantes.
+3. Lors d’un `git pull` si la branche locale a divergé de la branche distante.
+
+---
+
+## 🧭 Comment Savoir s’il y a un Conflit ?
+
+Après un `git merge`, Git affiche un message d’erreur :
+
+```bash
+Auto-merging fichier.txt
+CONFLICT (content): Merge conflict in fichier.txt
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+<br>
+<br>
+
+## 🛠️ Résoudre un Conflit Étape par Étape
+
+### 1. Ouvrir le fichier en conflit
+
+Git ajoute des **marqueurs de conflit** pour indiquer les parties modifiées :
+
+```text
+<<<<<<< HEAD
+Contenu depuis la branche actuelle
+=======
+Contenu depuis la branche fusionnée
+>>>>>>> feature
+```
+### 2. Choisir quoi garder
+
+✅ Garder une des deux versions.  
+✅ Combiner les deux manuellement.  
+✅ Réécrire entièrement selon les besoins.
+
+🧽 **N’oubliez pas de supprimer les marqueurs** (`<<<<<<<`, `=======`, `>>>>>>>`) !
+
+### 3. Ajouter le fichier résolu
+
+```bash
+git add fichier.txt
+```
+### 4. Terminer le merge
+
+```bash
+git commit
+```
+## 🧰 Outils Utiles pour Résoudre les Conflits
+
+- **Visual Studio Code** : propose des boutons pour accepter une version, l’autre, ou les deux.
+- **KDiff3**, **Meld**, **Beyond Compare**, etc. : outils de fusion visuelle.
+- `git mergetool` : lance un outil graphique configuré pour résoudre les conflits.
+
+## 🚫 Annuler un Merge en Conflit
+
+Si vous voulez annuler un merge (non terminé) :
+
+```bash
+git merge --abort
+
+git rebase --abort
+```
+
+<br>
+
+## ✅ Bonnes Pratiques
+
+- 💾 Faire des commits fréquents.
+- 🔄 Tirer (`git pull`) régulièrement pour éviter trop de divergences.
+- 🌿 Utiliser des branches courtes et isolées.
+- 👀 Relire les modifications conflictuelles avant de les valider.
